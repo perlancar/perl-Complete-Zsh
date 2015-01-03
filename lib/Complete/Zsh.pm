@@ -109,9 +109,6 @@ sub format_completion {
 This module provides routines related to doing completion in zsh.
 
 
-=head1 TODOS
-
-
 =head1 SEE ALSO
 
 L<Complete>
