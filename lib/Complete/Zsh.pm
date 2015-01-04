@@ -17,6 +17,7 @@ our @EXPORT_OK = qw(
                );
 
 require Complete::Bash;
+require Complete::Fish;
 
 our %SPEC;
 
@@ -98,7 +99,9 @@ _
     result_naked => 1,
 };
 sub format_completion {
-    Complete::Bash::format_completion(@_);
+    # zsh also supports showing description (by using "\tDESCRIPTION", we
+    # currently use Complete::Fish code for this
+    Complete::Fish::format_completion(@_);
 }
 
 1;
