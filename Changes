@@ -1,5 +1,10 @@
 Revision history for Complete-Zsh
 
+0.03    2016-10-22 (PERLANCAR)
+
+	- Remove parse_cmdline() because it is unused.
+
+
 0.02    2015-09-09 (PERLANCAR)
 
 	- No functional changes.
