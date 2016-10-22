@@ -23,49 +23,6 @@ $SPEC{':package'} = {
     summary => 'Completion module for zsh shell',
 };
 
-$SPEC{parse_cmdline} = {
-    v => 1.1,
-    summary => 'Parse shell command-line for processing by completion routines',
-    description => <<'_',
-
-This function converts COMP_LINE (str) (which can be supplied by zsh from `read
--l`) and COMP_POINT (int) (which can be supplied by zsh from `read -ln`) into
-COMP_WORDS (array) and COMP_CWORD (int), like what bash supplies to shell
-functions. Currently implemented using `Complete::Bash`'s `parse_cmdline`.
-
-_
-    args_as => 'array',
-    args => {
-        cmdline => {
-            summary => 'Command-line, defaults to COMP_LINE environment',
-            schema => 'str*',
-            pos => 0,
-        },
-    },
-    result => {
-        schema => ['array*', len=>2],
-        description => <<'_',
-
-Return a 2-element array: `[$words, $cword]`. `$words` is array of str,
-equivalent to `COMP_WORDS` provided by bash to shell functions. `$cword` is an
-integer, equivalent to `COMP_CWORD` provided by bash to shell functions. The
-word to be completed is at `$words->[$cword]`.
-
-Note that COMP_LINE includes the command name. If you want the command-line
-arguments only (like in `@ARGV`), you need to strip the first element from
-`$words` and reduce `$cword` by 1.
-
-_
-    },
-    result_naked => 1,
-};
-sub parse_cmdline {
-    my ($line) = @_;
-
-    $line //= $ENV{COMP_LINE};
-    Complete::Bash::parse_cmdline($line, length($line));
-}
-
 $SPEC{format_completion} = {
     v => 1.1,
     summary => 'Format completion for output (for shell)',
