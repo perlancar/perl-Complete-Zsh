@@ -14,8 +14,6 @@ our @EXPORT_OK = qw(
                        format_completion
                );
 
-require Complete::Bash;
-
 our %SPEC;
 
 $SPEC{':package'} = {
@@ -28,8 +26,7 @@ $SPEC{format_completion} = {
     summary => 'Format completion for output (for shell)',
     description => <<'_',
 
-zsh accepts completion reply in the form of one entry per line to STDOUT.
-Currently the formatting is done using `Complete::Bash`'s `format_completion`.
+The output of this routine is meant to be fed to `compadd`.
 
 _
     args_as => 'array',
@@ -53,7 +50,48 @@ _
     result_naked => 1,
 };
 sub format_completion {
-    Complete::Bash::format_completion(@_);
+    my ($hcomp, $opts) = @_;
+
+    $opts //= {};
+
+    $hcomp = {words=>$hcomp} unless ref($hcomp) eq 'HASH';
+    my $comp     = $hcomp->{words};
+    my $as       = $hcomp->{as} // 'string';
+    my $path_sep = $hcomp->{path_sep};
+
+    if (defined($path_sep) && @$comp == 1) {
+        my $re = qr/\Q$path_sep\E\z/;
+        my $word;
+        if (ref($comp->[0]) eq 'HASH') {
+            $comp = [$comp->[0], {word=>"$comp->[0] "}] if
+                $comp->[0]{word} =~ $re;
+        } else {
+            $comp = [$comp->[0], "$comp->[0] "]
+                if $comp->[0] =~ $re;
+        }
+    }
+
+    my @res;
+    for my $entry (@$comp) {
+        my $word = ref($entry) eq 'HASH' ? $entry->{word} : $entry;
+        my $esc_mode = $hcomp->{esc_mode} // $hcomp->{escmode} // 'default';
+        if ($esc_mode eq 'shellvar') {
+            # don't escape $
+            $word =~ s!([^A-Za-z0-9,+._/\$~-])!\\$1!g;
+        } elsif ($esc_mode eq 'none') {
+            # no escaping
+        } else {
+            # default
+            $word =~ s!([^A-Za-z0-9,+._/:~-])!\\$1!g;
+        }
+        push @res, $word;
+    }
+
+    if ($as eq 'array') {
+        return \@res;
+    } else {
+        return join("", map {($_, "\n")} @res);
+    }
 }
 
 1;
