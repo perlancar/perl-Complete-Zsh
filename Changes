@@ -1,9 +1,9 @@
-0.03    2016-10-22 (PERLANCAR)
+0.03    2016-10-22  Released-By: PERLANCAR
 
 	- Remove parse_cmdline() because it is unused.
 
 
-0.02    2015-09-09 (PERLANCAR)
+0.02    2015-09-09  Released-By: PERLANCAR
 
 	- No functional changes.
 
@@ -12,11 +12,11 @@
 	  requirement.
 
 
-0.01    2014-11-29 (PERLANCAR)
+0.01    2014-11-29  Released-By: PERLANCAR
 
         - First release with implementation.
 
 
-0.00    2014-07-02 (SHARYANTO)
+0.00    2014-07-02  Released-By: SHARYANTO
 
         - First release, not implemented yet.
